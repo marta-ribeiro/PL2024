@@ -1,41 +1,31 @@
 import re
+import sys
 
 
-def cabecalho(header):
-
-    ans = re.sub(r"#([\w\s]*)", r"<h1>\1</h1>", header)
-    return ans
-
-
-def negrito(bold):
-
-    ans = re.sub(r"\*\*([\w\s]*)\*\*", r"<b>\1</b>", bold)
-    return ans
-
-
-def italico(italic):
-    ans = re.sub(r"\*{1}([\w\s]+)\*{1}", r"<i>\1</i>", italic)
-    return ans
-
-
-def endereco(link):
-
-    ans = re.sub(r"\[([\w\s]+)]\(([\w.:/]+)\)", r'<a href="\2">\1</a>', link)
-    return ans
-
-
-def imagem(image):
-    ans = re.sub(r"!\[([\w\s]+)]\(([\w.:/]+)\)", r'<img src="\2" alt="\1"/>', image)
-    return ans
+def parse_html(linha):
+    # HEADER
+    linha = re.sub(r"\B### (.+)", r"<h3>\1</h3>", linha)
+    linha = re.sub(r"\B## (.+)", r"<h2>\1</h2>", linha)
+    linha = re.sub(r"\B# (.+)", r"<h1>\1</h1>", linha)
+    # ITALIC
+    linha = re.sub(r"[^\*]\*(\w[\w\s]+\w)\*", r"<i>\1</i>", linha)
+    # BOLD
+    linha = re.sub(r"\*\*(\w[\w\s]*\w)\*\*", r"<b>\1</b>", linha)
+    # IMAGEM
+    linha = re.sub(r"!\[([\w\s]+)]\(([\w.:/]+)\)", r'<img src="\2" alt="\1"/>', linha)
+    # ENDEREÇO
+    linha = re.sub(r"\[([\w\s]+)]\(([\w.:/]+)\)", r'<a href="\2">\1</a>', linha)
+    # LISTA
+    linha1 = re.sub(r"\d*\. ([\w ]+)", r"<li>\1</li>", linha)
+    linha = re.sub(r"(<li>.*</li>[\n]?)+", r"<ol>\n\g<0></ol>", linha1)
+    return linha
 
 
 def main():
 
-    print(cabecalho("#Exemplo de titulo"))
-    print(negrito("** Olha que lindo **"))
-    print(italico("*Fica em italicooooo *"))
-    print(endereco("[página da UC](http://www.uc.pt)"))
-    print(imagem("![imagem dum coelho](http://www.coellho.com)"))
+    ficheiro_html = open("example.html", "w")
+    ficheiro_html.write(parse_html(sys.stdin.read()))
+    ficheiro_html.close()
 
 
 if __name__ == "__main__":

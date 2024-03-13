@@ -33,7 +33,7 @@ def pagamento(lista, num):
         flag = 1
 
     saldo_euro += int(num)
-    saldo_centimo += int((num % 1) * 100)
+    saldo_centimo += (num % 1) * 100
 
     for moeda in lista:
         euro = re.match(r'\d+(?=e)', moeda)
@@ -67,7 +67,7 @@ def escolher_produto(produtos, id_prod, saldo):
 
     else:
         euro = int(saldo)
-        centimo = int((saldo % 1) * 100)
+        centimo = (saldo % 1) * 100
         produto['quant'] -= 1
         print(f"SALDO = {euro}e{centimo}c")
 
@@ -76,8 +76,26 @@ def escolher_produto(produtos, id_prod, saldo):
 
 def sair(saldo):
 
-    print(f"TROCO {int(saldo)}e{int((saldo % 1) * 100)}c")
-    print("Até à próxima!")
+    troco = ['2e', '1e', '50c', '20c', '10c', '5c', '2c', '1c']
+    valores = [2, 1, 0.5, 0.2, 0.1, 0.05, 0.02, 0.01]
+    quantidade = [0, 0, 0, 0, 0, 0, 0, 0]
+    i = 0
+
+    for moeda in valores:
+        while saldo >= moeda:
+            saldo = round(saldo, 2)
+            saldo -= moeda
+            quantidade[i] += 1
+        i += 1
+
+    j = 0
+    print("Pode retirar o troco: ", end=' ')
+    while j < 8:
+        if quantidade[j] != 0:
+            print(f"{quantidade[j]}x {troco[j]}", end=' ')
+        j += 1
+
+    print("\nAté à próxima!")
 
 
 def main():

@@ -1,19 +1,25 @@
 import re
 import datetime
+import json
+
+
+def json_to_python():
+    ficheiro = open("produtos.json", 'r')
+    produtos = json.load(ficheiro)
+    return produtos
 
 
 def lista_produtos(num):
-    produtos = {'1': ('água', '50c'),
-                '2': ('bolo', '70c'),
-                '3': ('bolachas', '60c'),
-                '4': ('sumo', '1e'),
-                '5': ('batatas', '1e 10c')}
+
+    produtos = json_to_python()
 
     if num == 1:
-        print("id |nome |preço")
 
-        for chave in produtos:
-            print(f"{chave} {produtos[chave][0]} {produtos[chave][1]}")
+        chave = produtos[0].keys()
+        print(" | ".join(chave))
+        for produto in produtos:
+            print(" | ".join(str(produto[key]) for key in chave))
+
     else:
         return produtos
 
@@ -50,20 +56,24 @@ def pagamento(lista, num):
 def escolher_produto(id_prod, saldo):
 
     produtos = lista_produtos(2)
-    custo = produtos[id_prod][1]
-    lista_custo = re.findall(r'\w+\d*', custo)
+    custo = produtos[int(id_prod) - 1]
+    lista_custo = re.findall(r'\w+\d*', custo['preco'])
 
     saldo -= pagamento(lista_custo, -1)
-    euro = int(saldo)
-    centimo = int((saldo % 1) * 100)
-    print(f"SALDO = {euro}e{centimo}c")
+    if saldo < 0:
+        print("Não tem dinheiro suficiente.")
+        saldo += pagamento(lista_custo, -1)
+    else:
+        euro = int(saldo)
+        centimo = int((saldo % 1) * 100)
+        print(f"SALDO = {euro}e{centimo}c")
 
     return saldo
 
 
 def sair(saldo):
 
-    print(f"TROCO {int(saldo)}e{int((saldo % 1) * 100)}c")
+    print(f"TROCO {int(saldo)}e{int((abs(saldo) % 1) * 100)}c")
 
 
 def main():
@@ -76,7 +86,6 @@ def main():
           "SELECIONAR X - escolher produto a comprar\n"
           "SAIR - finalizar compra")
     opcao = input("\n>> ")
-
     er = re.findall(r'\w+\d*', opcao)
     x = er[0]
 

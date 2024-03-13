@@ -24,6 +24,23 @@ def lista_produtos(produtos):
         print(" | ".join(str(produto[key]) for key in chave))
 
 
+def adicionar_produtos(produtos):
+
+    nome = input("Que produto deseja adicionar? ")
+    qntd = int(input("Que quantidade pretende? "))
+    j = True
+    for produto in produtos:
+        if produto['nome'] == nome:
+            produto['quant'] += qntd
+            j = False
+
+    if j:
+        cod = int(produtos[-1]['cod']) + 1
+        preco = input("Insira o preço: ")
+        novo_prod = {'cod': cod, 'nome': nome, 'quant': qntd, 'preco': preco}
+        produtos.append(novo_prod)
+
+
 def pagamento(lista, num):
     saldo_euro = 0
     saldo_centimo = 0
@@ -107,6 +124,7 @@ def main():
     print("LISTAR - lista de produtos\n"
           "MOEDA (Xe, Xc). - dinheiro a inserir\n"
           "SELECIONAR X - escolher produto a comprar\n"
+          "ADICIONAR - adicionar produtos/ quantidades\n"
           "SAIR - finalizar compra")
     opcao = input("\n>> ")
     er = re.findall(r'\w+\d*', opcao)
@@ -121,6 +139,8 @@ def main():
         elif x.upper() == 'SELECIONAR':
             er.pop(0)
             saldo = escolher_produto(produtos, er[0], saldo)
+        elif x.upper() == 'ADICIONAR':
+            adicionar_produtos(produtos)
         else:
             print("O comando que introduziu não é aceite. Tente outra vez.")
         opcao = input("\n>> ")

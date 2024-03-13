@@ -28,5 +28,11 @@
         "nome": "batatas",
         "quant": 3,
         "preco": "1e 10c"
+    },
+    {
+        "cod": 6,
+        "nome": "mentos",
+        "quant": 4,
+        "preco": "1e 10c"
     }
 ]

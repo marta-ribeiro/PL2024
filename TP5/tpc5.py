@@ -1,4 +1,5 @@
 import re
+import datetime
 
 
 def lista_produtos(num):
@@ -68,6 +69,8 @@ def sair(saldo):
 def main():
     saldo = 0
     print("-----MÁQUINA DE VENDING-----")
+    print(f"{datetime.datetime.now().strftime('%d-%m-%Y')}, Stock carregado, Estado atualizado.")
+    print("Bom dia. Estou disponível para atender o seu pedido.\n")
     print("LISTAR - lista de produtos\n"
           "MOEDA (Xe, Xc). - dinheiro a inserir\n"
           "SELECIONAR X - escolher produto a comprar\n"

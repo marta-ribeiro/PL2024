@@ -6,22 +6,22 @@ import json
 def json_to_python():
     ficheiro = open("produtos.json", 'r')
     produtos = json.load(ficheiro)
+    ficheiro.close()
     return produtos
 
 
-def lista_produtos(num):
+def python_to_json(produtos):
+    ficheiro = open("produtos.json", 'w')
+    conteudo = json.dumps(produtos, indent=4)
+    ficheiro.write(conteudo)
+    ficheiro.close()
 
-    produtos = json_to_python()
 
-    if num == 1:
-
-        chave = produtos[0].keys()
-        print(" | ".join(chave))
-        for produto in produtos:
-            print(" | ".join(str(produto[key]) for key in chave))
-
-    else:
-        return produtos
+def lista_produtos(produtos):
+    chave = produtos[0].keys()
+    print(" | ".join(chave))
+    for produto in produtos:
+        print(" | ".join(str(produto[key]) for key in chave))
 
 
 def pagamento(lista, num):
@@ -53,19 +53,22 @@ def pagamento(lista, num):
     return saldo_euro + saldo_centimo * 0.01
 
 
-def escolher_produto(id_prod, saldo):
+def escolher_produto(produtos, id_prod, saldo):
 
-    produtos = lista_produtos(2)
-    custo = produtos[int(id_prod) - 1]
-    lista_custo = re.findall(r'\w+\d*', custo['preco'])
+    produto = produtos[int(id_prod) - 1]
+    lista_custo = re.findall(r'\w+\d*', produto['preco'])
 
     saldo -= pagamento(lista_custo, -1)
     if saldo < 0:
         print("Não tem dinheiro suficiente.")
         saldo += pagamento(lista_custo, -1)
+    elif produto['quant'] == 0:
+        print("Este produto não está disponível")
+
     else:
         euro = int(saldo)
         centimo = int((saldo % 1) * 100)
+        produto['quant'] -= 1
         print(f"SALDO = {euro}e{centimo}c")
 
     return saldo
@@ -73,11 +76,13 @@ def escolher_produto(id_prod, saldo):
 
 def sair(saldo):
 
-    print(f"TROCO {int(saldo)}e{int((abs(saldo) % 1) * 100)}c")
+    print(f"TROCO {int(saldo)}e{int((saldo % 1) * 100)}c")
+    print("Até à próxima!")
 
 
 def main():
     saldo = 0
+    produtos = json_to_python()
     print("-----MÁQUINA DE VENDING-----")
     print(f"{datetime.datetime.now().strftime('%d-%m-%Y')}, Stock carregado, Estado atualizado.")
     print("Bom dia. Estou disponível para atender o seu pedido.\n")
@@ -91,19 +96,20 @@ def main():
 
     while x.upper() != 'SAIR':
         if x.upper() == 'LISTAR':
-            lista_produtos(1)
+            lista_produtos(produtos)
         elif x.upper() == 'MOEDA':
             er.pop(0)
             saldo = pagamento(er, saldo)
         elif x.upper() == 'SELECIONAR':
             er.pop(0)
-            saldo = escolher_produto(er[0], saldo)
+            saldo = escolher_produto(produtos, er[0], saldo)
         else:
             print("O comando que introduziu não é aceite. Tente outra vez.")
         opcao = input("\n>> ")
         er = re.findall(r'\w+\d*', opcao)
         x = er[0]
     sair(saldo)
+    python_to_json(produtos)
 
 
 if __name__ == "__main__":

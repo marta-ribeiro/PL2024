@@ -1,7 +1,32 @@
 [
-    {"cod": "1", "nome": "agua","quant": 15,"preco": "50c"},
-    {"cod": "2", "nome": "bolo","quant": 7,"preco": "70c"},
-    {"cod": "3", "nome": "bolachas","quant": 9,"preco": "60c"},
-    {"cod": "4", "nome": "sumo","quant": 6,"preco": "1e"},
-    {"cod": "5", "nome": "batatas","quant": 3,"preco": "1e 10c"}
-    ]
+    {
+        "cod": "1",
+        "nome": "agua",
+        "quant": 14,
+        "preco": "50c"
+    },
+    {
+        "cod": "2",
+        "nome": "bolo",
+        "quant": 7,
+        "preco": "70c"
+    },
+    {
+        "cod": "3",
+        "nome": "bolachas",
+        "quant": 9,
+        "preco": "60c"
+    },
+    {
+        "cod": "4",
+        "nome": "sumo",
+        "quant": 6,
+        "preco": "1e"
+    },
+    {
+        "cod": "5",
+        "nome": "batatas",
+        "quant": 3,
+        "preco": "1e 10c"
+    }
+]
